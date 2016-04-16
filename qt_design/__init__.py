@@ -14,6 +14,9 @@ import pickle
 import sys
 import os
 
+import PyQt4.QtCore as qc
+QtCore.QLocale.setDefault(QtCore.QLocale('en_US'))
+
 
 class DefaultWindow(Ui_MainWindow, DsMethods, SsMethods):
     def preload_2subs_data(self, pname):

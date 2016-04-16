@@ -99,7 +99,8 @@ def plot_eq_n_point(fit_results, reac_obj, sfolder, grid=False):
 
 
 def plot_singlegraph(reac_obj, plot_obj, signal=0, grid=False, equation=None, legend='', global_fit=False,
-                     rep_fit=False, pick=-1, errorbars=False, alpha0=0.15, alpha1=1, sname='Substrate'):
+                     rep_fit=False, pick=-1, errorbars=False, alpha0=0.15, alpha1=1, sname='Substrate',
+                     extrapolation=0):
     """
     Plots designated plot based on signal and reaction object to plot_object.
     If equation is given it will be ploted with the points
@@ -159,7 +160,8 @@ def plot_singlegraph(reac_obj, plot_obj, signal=0, grid=False, equation=None, le
                           alpha=alp)
 
         # Plot linear fits
-        line_vals = np.linspace(min(x_rep), max(x_rep), 100)
+        extrap_val = (max(x_rep) - min(x_rep)) * extrapolation / 100
+        line_vals = np.linspace(min(x_rep) - extrap_val, max(x_rep) + extrap_val, 100)
         if (signal == 1 or signal == 2) and rep_fit:
             fit = np.polyfit(x_rep, y_rep, rep_fit)
             fit_fn = np.poly1d(fit)
@@ -177,7 +179,8 @@ def plot_singlegraph(reac_obj, plot_obj, signal=0, grid=False, equation=None, le
         y_globs = np.hstack(tuple(y_vals))
         fit = np.polyfit(x_globs, y_globs, global_fit)
         fit_fn = np.poly1d(fit)
-        line_vals = np.linspace(min(x_globs), max(x_globs), 100)
+        extrap_val = (max(x_rep) - min(x_rep)) * extrapolation / 100
+        line_vals = np.linspace(min(x_globs) - extrap_val, max(x_globs) + extrap_val, 100)
         plot_obj.plot(line_vals, fit_fn(line_vals),
                       ms=4,
                       color='b',
@@ -193,6 +196,9 @@ def plot_singlegraph(reac_obj, plot_obj, signal=0, grid=False, equation=None, le
     y_min = min([min(d_set) for d_set in y_vals])
     y_max = max([max(d_set) for d_set in y_vals])
 
+    extrap_val = (x_max - x_min) * extrapolation / 100
+    x_max = x_max + extrap_val
+    x_min = x_min - extrap_val
     x_space = (x_max - x_min) * 0.05
     y_space = (y_max - y_min) * 0.05
     plot_obj.set_xlim(x_min - x_space, x_max + x_space)

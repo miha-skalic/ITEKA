@@ -61,6 +61,11 @@ class DefaultWindow(Ui_MainWindow, DsMethods, SsMethods):
         for button in self.GraphBG1.buttons():
                 button.show()
         self.Leg1Box.show()
+        self.label.show()
+        self.label_2.show()
+        self.Extrap1.show()
+        self.Extrap2.show()
+
         if self.reaction_data.is_single():
             self.Leg2Box.show()
 
@@ -136,6 +141,10 @@ class DefaultWindow(Ui_MainWindow, DsMethods, SsMethods):
 
         self.Leg1Box.hide()
         self.Leg2Box.hide()
+        self.label.hide()
+        self.label_2.hide()
+        self.Extrap1.hide()
+        self.Extrap2.hide()
         self.Graph1Sel.setCurrentIndex(0)
         self.Graph2Sel.setCurrentIndex(1)
         self.fig.clear()
@@ -199,11 +208,13 @@ class DefaultWindow(Ui_MainWindow, DsMethods, SsMethods):
         reaction_plots.plot_singlegraph(self.reaction_data, self.axes, self.Graph1Sel.currentIndex(),
                                         legend='Replicate ' if self.Leg1Box.isChecked() else '',
                                         rep_fit=repfit1,
-                                        global_fit=globfit1)
+                                        global_fit=globfit1,
+                                        extrapolation = self.Extrap1.value())
         reaction_plots.plot_singlegraph(self.reaction_data, self.axes2, self.Graph2Sel.currentIndex(),
                                         legend='Replicate ' if self.Leg2Box.isChecked() else '',
                                         rep_fit=repfit2,
-                                        global_fit=globfit2)
+                                        global_fit=globfit2,
+                                        extrapolation = self.Extrap2.value())
 
         # New options
         self.Graph1Sel.show()
@@ -231,11 +242,13 @@ class DefaultWindow(Ui_MainWindow, DsMethods, SsMethods):
         self.axes2 = self.fig.add_subplot(122)
         reaction_plots.plot_singlegraph(self.reaction_data.get_repres(True), self.axes, self.Graph1Sel.currentIndex(),
                                         legend='Set ' if self.Leg1Box.isChecked() else '', rep_fit=repfit1,
-                                        global_fit=globfit1, sname=self.reaction_data.nameA)
+                                        global_fit=globfit1, sname=self.reaction_data.nameA,
+                                        extrapolation = self.Extrap1.value())
 
         reaction_plots.plot_singlegraph(self.reaction_data.get_repres(False), self.axes2, self.Graph1Sel.currentIndex(),
                                         legend='Set ' if self.Leg1Box.isChecked() else '', rep_fit=repfit2,
-                                        global_fit=globfit2, sname=self.reaction_data.nameB)
+                                        global_fit=globfit2, sname=self.reaction_data.nameB,
+                                        extrapolation = self.Extrap2.value())
 
         # Draw the plots
         self.canvas.draw()
@@ -331,6 +344,10 @@ class DefaultWindow(Ui_MainWindow, DsMethods, SsMethods):
         self.Graph1Sel.hide()
         self.Graph2Sel.hide()
         self.mpl_toolbar.hide()
+        self.label.hide()
+        self.label_2.hide()
+        self.Extrap1.hide()
+        self.Extrap2.hide()
         self.canvas.hide()
         self.StatusLab.hide()
 
@@ -360,6 +377,9 @@ class DefaultWindow(Ui_MainWindow, DsMethods, SsMethods):
 
         self.Leg1Box.stateChanged.connect(self.changegraph_layout)
         self.Leg2Box.stateChanged.connect(self.changegraph_layout)
+
+        self.Extrap1.valueChanged.connect(self.changegraph_layout)
+        self.Extrap2.valueChanged.connect(self.changegraph_layout)
 
         # Menu triggers
         self.actionNew_project.triggered.connect(self.reset_project)

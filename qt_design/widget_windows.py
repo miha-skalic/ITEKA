@@ -653,7 +653,7 @@ class ExploreSolutions(QtGui.QDialog, Ui_SolutionExplorer):
             slider.setEnabled(sel_eq[param].vary and enable_sliders)
 
         # change displayed equation
-        self.EqPic.setPixmap(QtGui.QPixmap('./qt_desing/eq_pic/{}.gif'.format(sel_eq.name)))
+        self.EqPic.setPixmap(QtGui.QPixmap('./qt_design/eq_pic/{}.gif'.format(sel_eq.name)))
 
         self.change_equation()
 

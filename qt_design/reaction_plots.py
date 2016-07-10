@@ -117,6 +117,9 @@ def plot_singlegraph(reac_obj, plot_obj, signal=0, grid=False, equation=None, le
     #grid settings
     plot_obj.grid(b=grid)
 
+    plot_obj.axhline(0, color='black')
+    plot_obj.axvline(0, color='black')
+
     # setup for proper graph
     if signal == 1:
         x_name = "1 / {} concentration [1 / {}]".format(sname, reac_obj.cunit)

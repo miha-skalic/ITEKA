@@ -210,7 +210,7 @@ class LoadDataDs(QtGui.QDialog, Ui_LoadDataDs):
 
         if self.subdata.isnewset():
             try:
-                self.subdata.add_set(varvar, constvar, rates)
+                self.subdata.add_set(varvar, constvar, rates, setname=self.SetNu.text())
             except AssertionError:
                 WarningMessage("Dimension mismatch. Can't add the replicate.")
             except ValueError:
@@ -245,6 +245,7 @@ class LoadDataDs(QtGui.QDialog, Ui_LoadDataDs):
             self.verticalWidget.setEnabled(True)
             self.SubBText.setEnabled(True)
             self.SubAText.setEnabled(True)
+            self.SetNu.setEnabled(True)
 
         else:
             self.verticalWidget.setEnabled(False)
@@ -252,9 +253,15 @@ class LoadDataDs(QtGui.QDialog, Ui_LoadDataDs):
             self.SubBText.setValue(self.subdata.get_last_const()[0])
             self.SubAText.setPlainText(', '.join(str(num) for num in self.subdata.get_current_var()))
             self.SubAText.setEnabled(False)
+            self.SetNu.setEnabled(False)
 
         # # Set text
-        self.SetNu.setText(str(self.subdata.setindex + 1))
+        if self.subdata.setindex < len(self.subdata.setnames[self.subdata.a_is_var]):
+            self.SetNu.setText(str(self.subdata.setnames[self.subdata.a_is_var][self.subdata.setindex]))
+
+        else:
+            self.SetNu.setText('Set ' + str(self.subdata.setindex + 1))
+
         self.RepNu.setText(str(self.subdata.get_rep_cout()))
 
     def change_substr_role(self):
@@ -1020,7 +1027,8 @@ class PointsView(QtGui.QDialog, Ui_PointsView):
         idx = 0 if idx == -1 else idx
         self.SetBox.clear()
         subs_sel = True if self.VarBox.currentIndex() == 0 else False
-        self.SetBox.addItems(['Set {}'.format(i + 1) for i in range(len(self.reac_data.AllVar[subs_sel]))])
+        # self.SetBox.addItems(['Set {}'.format(i + 1) for i in range(len(self.reac_data.AllVar[subs_sel]))])
+        self.SetBox.addItems([i for i in self.reac_data.setnames[subs_sel]])
         self.SetBox.setCurrentIndex(idx if idx < len(self.SetBox) else 0)
         self.qbox_level3()
 
@@ -1072,4 +1080,5 @@ class PointsView(QtGui.QDialog, Ui_PointsView):
                 self.reac_data.AllVar[subs_sel].pop(set_pos)
                 self.reac_data.AllRates[subs_sel].pop(set_pos)
                 self.reac_data.AllConst[subs_sel].pop(set_pos)
+                self.reac_data.setnames[subs_sel].pop(set_pos)
             self.qbox_level1()

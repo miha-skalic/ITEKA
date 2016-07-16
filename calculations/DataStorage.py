@@ -34,6 +34,7 @@ class OneSubstrate(object):
         self.cunit = cunit
         self.tunit = tunit
         self.runit = '({})/({})'.format(cunit, tunit)
+        self.setnames = []
 
     def __len__(self):
         """
@@ -45,7 +46,7 @@ class OneSubstrate(object):
         for con_rep, rat_rep in zip(self.concentrations, self.rates):
             yield con_rep, rat_rep
 
-    def add_replicate(self, n_concetration, n_rate, transform=True):
+    def add_replicate(self, n_concetration, n_rate, transform=True, setname=None):
         """
         Adds replicates
         """
@@ -61,6 +62,8 @@ class OneSubstrate(object):
             self.concentrations.append(n_concetration)
             self.rates.append(n_rate)
         self.replicates += 1
+        setname = 'Replicate ' + str(self.replicates) if setname is None else setname
+        self.setnames.append(setname)
 
     def res_sum(self, fitfunc, *_):
         """
@@ -98,6 +101,7 @@ class TwoSubstrates():
         self.Bconst = []
         self.Arates = []
         self.Brates = []
+        self.setnames = {True: [], False: []}
 
         self.AllVar = {True: self.Asets, False: self.Bsets}
         self.AllConst = {True: self.Aconst, False: self.Bconst}
@@ -116,7 +120,7 @@ class TwoSubstrates():
         self.a_is_var = not self.a_is_var
         self.setindex = 0
 
-    def add_rep(self, varvals, constvar, rates,  setpos=None):
+    def add_rep(self, varvals, constvar, rates, setpos=None):
         """
         Adds replicate to specified set
         """
@@ -134,7 +138,7 @@ class TwoSubstrates():
         self.AllRates[self.a_is_var][setpos].append(rates)
         self.AllConst[self.a_is_var][setpos].append(constvar)
 
-    def add_set(self, varvals, constvals, rates):
+    def add_set(self, varvals, constvals, rates, setname='Nameless_set'):
         """
         Adds data to sets
         """
@@ -148,6 +152,8 @@ class TwoSubstrates():
         self.AllVar[self.a_is_var].append([varvals])
         self.AllConst[self.a_is_var].append([constvals])
         self.AllRates[self.a_is_var].append([rates])
+
+        self.setnames[self.a_is_var].append(setname)
 
     def next_set(self):
         """
@@ -227,8 +233,10 @@ class TwoSubstrates():
         Returns OneSubstrate objects that reprisents data.
         """
         new_class = OneSubstrate('temp', cunit=self.cunit, tunit=self.tunit)
+        n = 0
         for concx, ratex, _ in self.get_points(a_var):
-            new_class.add_replicate(concx, ratex, transform=False)
+            new_class.add_replicate(concx, ratex, transform=False, setname=self.setnames[a_var][n])
+            n += 1
         return new_class
 
     def get_allpoints(self, a_var=True):

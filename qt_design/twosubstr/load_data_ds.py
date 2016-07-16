@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'load_data_ds.ui'
+# Form implementation generated from reading ui file 'C:/ws/iceland/itc_software/qt_desing/twosubstr/load_data_ds.ui'
 #
-# Created: Fri Jun 12 17:18:39 2015
-#      by: PyQt4 UI code generator 4.11.3
+# Created by: PyQt4 UI code generator 4.11.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -46,7 +45,6 @@ class Ui_LoadDataDs(object):
         self.verticalWidget_2 = QtGui.QWidget(LoadDataDs)
         self.verticalWidget_2.setObjectName(_fromUtf8("verticalWidget_2"))
         self.verticalLayout_6 = QtGui.QVBoxLayout(self.verticalWidget_2)
-        self.verticalLayout_6.setMargin(0)
         self.verticalLayout_6.setObjectName(_fromUtf8("verticalLayout_6"))
         self.SubBText = QtGui.QDoubleSpinBox(self.verticalWidget_2)
         self.SubBText.setDecimals(5)
@@ -65,7 +63,6 @@ class Ui_LoadDataDs(object):
         self.verticalWidget = QtGui.QWidget(LoadDataDs)
         self.verticalWidget.setObjectName(_fromUtf8("verticalWidget"))
         self.verticalLayout_5 = QtGui.QVBoxLayout(self.verticalWidget)
-        self.verticalLayout_5.setMargin(0)
         self.verticalLayout_5.setObjectName(_fromUtf8("verticalLayout_5"))
         self.label = QtGui.QLabel(self.verticalWidget)
         self.label.setObjectName(_fromUtf8("label"))
@@ -122,15 +119,15 @@ class Ui_LoadDataDs(object):
         self.label_7 = QtGui.QLabel(LoadDataDs)
         self.label_7.setObjectName(_fromUtf8("label_7"))
         self.formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.label_7)
-        self.SetNu = QtGui.QLabel(LoadDataDs)
-        self.SetNu.setObjectName(_fromUtf8("SetNu"))
-        self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.SetNu)
         self.label_5 = QtGui.QLabel(LoadDataDs)
         self.label_5.setObjectName(_fromUtf8("label_5"))
         self.formLayout.setWidget(1, QtGui.QFormLayout.LabelRole, self.label_5)
         self.RepNu = QtGui.QLabel(LoadDataDs)
         self.RepNu.setObjectName(_fromUtf8("RepNu"))
         self.formLayout.setWidget(1, QtGui.QFormLayout.FieldRole, self.RepNu)
+        self.SetNu = QtGui.QLineEdit(LoadDataDs)
+        self.SetNu.setObjectName(_fromUtf8("SetNu"))
+        self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.SetNu)
         self.verticalLayout_4.addLayout(self.formLayout)
         spacerItem3 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Ignored)
         self.verticalLayout_4.addItem(spacerItem3)
@@ -156,9 +153,9 @@ class Ui_LoadDataDs(object):
         self.SwitchSet.setText(_translate("LoadDataDs", "Next set", None))
         self.SwitchRoles.setText(_translate("LoadDataDs", "Switch substrate roles", None))
         self.label_7.setText(_translate("LoadDataDs", "Adding to set:", None))
-        self.SetNu.setText(_translate("LoadDataDs", "1", None))
         self.label_5.setText(_translate("LoadDataDs", "Replicates present:", None))
         self.RepNu.setText(_translate("LoadDataDs", "0", None))
+        self.SetNu.setText(_translate("LoadDataDs", "Set 1", None))
         self.OKButton.setText(_translate("LoadDataDs", "Import", None))
         self.CancelButton.setText(_translate("LoadDataDs", "Cancel", None))
 

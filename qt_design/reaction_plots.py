@@ -151,15 +151,15 @@ def plot_singlegraph(reac_obj, plot_obj, signal=0, grid=False, equation=None, le
         alp = alpha1 if (count == pick or pick == -1) else alpha0
         sel_col = cols.pop()
 
-        # plot points
+        # plot errors
         if errorbars and signal == 0:
             plot_obj.errorbar(list(errorbars[count][0]), errorbars[count][1],
                               yerr=[errorbars[count][2], errorbars[count][3]],
                               fmt='o', alpha=alp, color=sel_col)
 
-        # plot errors
+        # plot points
         else:
-            plot_obj.plot(x_rep, y_rep, 'o', ms=4, color=sel_col, label=legend + str(count + 1),
+            plot_obj.plot(x_rep, y_rep, 'o', ms=4, color=sel_col, label=reac_obj.setnames[count],
                           alpha=alp)
 
         # Plot linear fits

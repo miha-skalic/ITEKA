@@ -255,6 +255,70 @@ class DefaultWindow(Ui_MainWindow, DsMethods, SsMethods):
         self.canvas.show()
         self.mpl_toolbar.show()
 
+    def add_ds_dataset(self, vals, name, ds_objc, suba=True):
+        vals = [' '.join(nvals) for nvals in vals]
+        start = True
+        for i in range(0, len(vals), 3):
+            if start:
+                ds_objc.add_set(vals[i], vals[i + 1], vals[i + 2], setname=name)
+                start = False
+            else:
+                ds_objc.add_rep(vals[i], vals[i + 1], vals[i + 2])
+        ds_objc.next_set()
+
+    def read_reaction_data(self, handle):
+        name = handle.readline()
+        if name == '\n':
+            return 'SWITCHSETTO2', None
+        name = name.strip()
+        if name == '':  # Stream depleted
+            return None, None
+
+        vals = []
+
+        for line in handle:
+            line = line.strip().split()
+            if line == []:
+                break  # Handle
+            vals.append(line)
+
+        vals = list(map(list, zip(*vals)))
+        assert (len(vals) % 3 == 0)
+
+        return vals, name
+
+    def load_from_table(self, load_file):
+
+        with open(load_file, 'r') as hanlde:
+            pname = hanlde.readline().strip()
+            aname = hanlde.readline().strip()
+            bname = hanlde.readline().strip()
+            cunit = hanlde.readline().strip()
+            tunit = hanlde.readline().strip()
+
+            ds_objc = calculations.TwoSubstrates(pname, aname, bname, tunit=tunit, cunit=cunit)
+            if hanlde.readline().strip() != '':
+                print("Error, Missformat")
+
+            while True:
+                set_vals, set_name = self.read_reaction_data(hanlde)
+                if set_vals == None and set_name == None:  # depleted iter
+                    break
+                elif set_vals == 'SWITCHSETTO2':  # switch substrate roles
+                    ds_objc.change_varible()
+                    continue
+                self.add_ds_dataset(set_vals, set_name, ds_objc)
+        self.reaction_data = ds_objc
+
+
+    def loadtable(self):
+        dialog = QtGui.QFileDialog()
+        filename = QtGui.QFileDialog.getOpenFileName(dialog, 'Select table file', os.getenv('HOME'))
+        if filename:
+            self.reset_project()
+            self.load_from_table(filename)
+            self.post_load()
+
     def load_from_file(self):
         """
         Loads pickle file
@@ -386,7 +450,7 @@ class DefaultWindow(Ui_MainWindow, DsMethods, SsMethods):
         self.actionLoad_input_data.triggered.connect(self.load_from_file)
         self.actionSave_input_data.triggered.connect(self.save_to_file)
         self.actionExport_data_xls.triggered.connect(self.save_to_excel)
-
+        self.actionImport_table.triggered.connect(self.loadtable)
 
 app = QtGui.QApplication(sys.argv)
 MainWindow = QtGui.QMainWindow()

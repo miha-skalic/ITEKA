@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'main.ui'
+# Form implementation generated from reading ui file 'C:/ws/iceland/itc_software/qt_desing/main.ui'
 #
 # Created by: PyQt4 UI code generator 4.11.4
 #
@@ -157,11 +157,17 @@ class Ui_MainWindow(object):
         self.actionNew_project.setObjectName(_fromUtf8("actionNew_project"))
         self.actionExport_data_xls = QtGui.QAction(MainWindow)
         self.actionExport_data_xls.setObjectName(_fromUtf8("actionExport_data_xls"))
+        self.actionImport_table = QtGui.QAction(MainWindow)
+        self.actionImport_table.setObjectName(_fromUtf8("actionImport_table"))
+        self.actionImport_table_Substrate_B = QtGui.QAction(MainWindow)
+        self.actionImport_table_Substrate_B.setObjectName(_fromUtf8("actionImport_table_Substrate_B"))
         self.menuFile.addAction(self.actionNew_project)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionSave_input_data)
         self.menuFile.addAction(self.actionLoad_input_data)
         self.menuFile.addAction(self.actionExport_data_xls)
+        self.menuFile.addSeparator()
+        self.menuFile.addAction(self.actionImport_table)
         self.menubar.addAction(self.menuFile.menuAction())
 
         self.retranslateUi(MainWindow)
@@ -200,4 +206,13 @@ class Ui_MainWindow(object):
         self.actionLoad_input_data.setText(_translate("MainWindow", "Import data (*.pkl)", None))
         self.actionNew_project.setText(_translate("MainWindow", "New project", None))
         self.actionExport_data_xls.setText(_translate("MainWindow", "Export data (*.xls)", None))
+        self.actionImport_table.setText(_translate("MainWindow", "Import double substrate table", None))
+        self.actionImport_table_Substrate_B.setText(_translate("MainWindow", "Import table (Substrate B)", None))
+
+
+class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
+    def __init__(self, parent=None, f=QtCore.Qt.WindowFlags()):
+        QtGui.QMainWindow.__init__(self, parent, f)
+
+        self.setupUi(self)
 

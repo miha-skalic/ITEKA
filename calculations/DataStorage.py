@@ -25,12 +25,13 @@ class OneSubstrate(object):
     """
     Holds experimental data for one enzyme
     """
-    def __init__(self, name, tunit='s', cunit='mM'):
+    def __init__(self, name, enzymec, tunit='s', cunit='mM'):
         self.replicates = 0
         self.name = name
         self.concentrations = None
         self.rates = None
         self.single = True
+        self.enzymec = enzymec
         self.cunit = cunit
         self.tunit = tunit
         self.runit = '({})/({})'.format(cunit, tunit)
@@ -85,7 +86,8 @@ class TwoSubstrates():
     """
     Stores data for two substrates
     """
-    def __init__(self, p_name, aname, bname, is_itc=False, arate=1, brate=1, tunit='s', cunit='mM'):
+    def __init__(self, p_name, aname, bname, is_itc=False, arate=1, brate=1, tunit='s', cunit='mM',
+                 enzymec = 1):
         self.nameA = str(aname)
         self.nameB = str(bname)
         self.name = str(p_name)
@@ -93,6 +95,7 @@ class TwoSubstrates():
         self.setindex = 0
         self.is_itc = bool(is_itc)
         self.single = False
+        self.enzymec = enzymec
 
         # storage objects
         self.Asets = []
@@ -232,7 +235,7 @@ class TwoSubstrates():
         """
         Returns OneSubstrate objects that reprisents data.
         """
-        new_class = OneSubstrate('temp', cunit=self.cunit, tunit=self.tunit)
+        new_class = OneSubstrate('temp', cunit=self.cunit, tunit=self.tunit, enzymec=self.enzymec)
         n = 0
         for concx, ratex, _ in self.get_points(a_var):
             new_class.add_replicate(concx, ratex, transform=False, setname=self.setnames[a_var][n])

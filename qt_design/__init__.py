@@ -19,7 +19,7 @@ QtCore.QLocale.setDefault(QtCore.QLocale('en_US'))
 
 
 class DefaultWindow(Ui_MainWindow, DsMethods, SsMethods):
-    def preload_2subs_data(self, pname):
+    def preload_2subs_data(self, pname, enzymec):
         """
         Sets up naming and reaction rates
         """
@@ -29,6 +29,7 @@ class DefaultWindow(Ui_MainWindow, DsMethods, SsMethods):
             return -1
         self.reaction_data = calculations.TwoSubstrates(pname, dlg.SetAName.text(),
                                                         dlg.SetBName.text(),
+                                                        enzymec = enzymec,
                                                         is_itc=dlg.IsITC.isChecked(),
                                                         arate=dlg.ASpBox.value(),
                                                         brate=dlg.BSpBox.value())
@@ -92,10 +93,11 @@ class DefaultWindow(Ui_MainWindow, DsMethods, SsMethods):
 
             # check for 2 substrates
             if dlg.radioButton_2.isChecked():
-                if self.preload_2subs_data(dlg.ProjectName.text().strip()) == -1:
+                if self.preload_2subs_data(dlg.ProjectName.text().strip(), float(dlg.EnzCoN.text())) == -1:
                     return
             else:
                 self.reaction_data = calculations.OneSubstrate(dlg.ProjectName.text().strip(),
+                                                               enzymec = float(dlg.EnzCoN.text()),
                                                                cunit=dlg.ConcVal.text(),
                                                                tunit=dlg.TimeVal.text())
 

@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'start_dial.ui'
+# Form implementation generated from reading ui file 'C:/ws/iceland/itc_software/qt_desing/start_dial.ui'
 #
-# Created: Wed Jun 17 14:13:17 2015
-#      by: PyQt4 UI code generator 4.11.3
+# Created by: PyQt4 UI code generator 4.11.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -26,7 +25,7 @@ except AttributeError:
 class Ui_start_dial(object):
     def setupUi(self, start_dial):
         start_dial.setObjectName(_fromUtf8("start_dial"))
-        start_dial.resize(434, 293)
+        start_dial.resize(453, 309)
         self.horizontalLayout_3 = QtGui.QHBoxLayout(start_dial)
         self.horizontalLayout_3.setObjectName(_fromUtf8("horizontalLayout_3"))
         self.verticalLayout = QtGui.QVBoxLayout()
@@ -65,23 +64,38 @@ class Ui_start_dial(object):
         self.line.setObjectName(_fromUtf8("line"))
         self.verticalLayout.addWidget(self.line)
         self.formLayout = QtGui.QFormLayout()
+        self.formLayout.setFieldGrowthPolicy(QtGui.QFormLayout.AllNonFixedFieldsGrow)
         self.formLayout.setObjectName(_fromUtf8("formLayout"))
-        self.label_3 = QtGui.QLabel(start_dial)
-        self.label_3.setObjectName(_fromUtf8("label_3"))
-        self.formLayout.setWidget(1, QtGui.QFormLayout.LabelRole, self.label_3)
-        self.label_4 = QtGui.QLabel(start_dial)
-        self.label_4.setObjectName(_fromUtf8("label_4"))
-        self.formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.label_4)
         self.label_5 = QtGui.QLabel(start_dial)
         self.label_5.setObjectName(_fromUtf8("label_5"))
         self.formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.label_5)
+        self.label_3 = QtGui.QLabel(start_dial)
+        self.label_3.setObjectName(_fromUtf8("label_3"))
+        self.formLayout.setWidget(1, QtGui.QFormLayout.LabelRole, self.label_3)
         self.TimeVal = QtGui.QLineEdit(start_dial)
         self.TimeVal.setObjectName(_fromUtf8("TimeVal"))
         self.formLayout.setWidget(1, QtGui.QFormLayout.FieldRole, self.TimeVal)
+        self.label_4 = QtGui.QLabel(start_dial)
+        self.label_4.setObjectName(_fromUtf8("label_4"))
+        self.formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.label_4)
         self.ConcVal = QtGui.QLineEdit(start_dial)
         self.ConcVal.setObjectName(_fromUtf8("ConcVal"))
         self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.ConcVal)
         self.verticalLayout.addLayout(self.formLayout)
+        self.line_2 = QtGui.QFrame(start_dial)
+        self.line_2.setFrameShape(QtGui.QFrame.HLine)
+        self.line_2.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line_2.setObjectName(_fromUtf8("line_2"))
+        self.verticalLayout.addWidget(self.line_2)
+        self.horizontalLayout = QtGui.QHBoxLayout()
+        self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
+        self.label_6 = QtGui.QLabel(start_dial)
+        self.label_6.setObjectName(_fromUtf8("label_6"))
+        self.horizontalLayout.addWidget(self.label_6)
+        self.EnzCoN = QtGui.QLineEdit(start_dial)
+        self.EnzCoN.setObjectName(_fromUtf8("EnzCoN"))
+        self.horizontalLayout.addWidget(self.EnzCoN)
+        self.verticalLayout.addLayout(self.horizontalLayout)
         self.buttonBox = QtGui.QDialogButtonBox(start_dial)
         self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
@@ -97,9 +111,18 @@ class Ui_start_dial(object):
         self.label.setText(_translate("start_dial", "Number of substrates:", None))
         self.radioButton.setText(_translate("start_dial", "1 substrate", None))
         self.radioButton_2.setText(_translate("start_dial", "2 substrates", None))
-        self.label_3.setText(_translate("start_dial", "time:", None))
-        self.label_4.setText(_translate("start_dial", "Concentration:", None))
         self.label_5.setText(_translate("start_dial", "Units", None))
+        self.label_3.setText(_translate("start_dial", "time:", None))
         self.TimeVal.setText(_translate("start_dial", "s", None))
+        self.label_4.setText(_translate("start_dial", "Concentration:", None))
         self.ConcVal.setText(_translate("start_dial", "mM", None))
+        self.label_6.setText(_translate("start_dial", "Enzyme Concentration", None))
+        self.EnzCoN.setText(_translate("start_dial", "1", None))
+
+
+class start_dial(QtGui.QDialog, Ui_start_dial):
+    def __init__(self, parent=None, f=QtCore.Qt.WindowFlags()):
+        QtGui.QDialog.__init__(self, parent, f)
+
+        self.setupUi(self)
 

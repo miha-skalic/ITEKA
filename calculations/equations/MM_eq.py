@@ -1,6 +1,6 @@
 import lmfit
 from calculations.equations import FitParam
-
+import os
 
 def mm_function(params, subs_c, rate, *_):
     """
@@ -8,8 +8,9 @@ def mm_function(params, subs_c, rate, *_):
     """
     km = params['km'].value
     v_max = params['v_max'].value
+    E = float(os.environ['Eval'])
 
-    rate_calc = v_max * subs_c / (km + subs_c)
+    rate_calc = v_max * E * subs_c / (km + subs_c)
     return rate_calc - rate
 
 
@@ -18,7 +19,9 @@ def create_mm(km, v_max, *_):
     Create hills equation
     """
     def eq(x, *_):
-        return v_max * x / (km + x)
+        E = float(os.environ['Eval'])
+
+        return v_max * E * x / (km + x)
     return eq
 
 

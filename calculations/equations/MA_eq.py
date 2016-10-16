@@ -1,6 +1,6 @@
 import lmfit
 from calculations.equations import FitParam
-
+import os
 
 def my_fiteq(params, subs_c, rate, *_):
     """
@@ -11,8 +11,8 @@ def my_fiteq(params, subs_c, rate, *_):
     act = params['act'].value
     kac = params['kac'].value
     kas = params['kas'].value
-
-    rate_calc = v_max * subs_c * act / (kms * (kas + act) + subs_c * (kac + act))
+    E = float(os.environ['Eval'])
+    rate_calc = v_max * E * subs_c * act / (kms * (kas + act) + subs_c * (kac + act))
     return rate_calc - rate
 
 
@@ -21,7 +21,8 @@ def create_my_eq(kms, v_max, act, kac, kas, *_):
     Mixed activation (irrev) equation
     """
     def eq(subs_c, *_):
-        return v_max * subs_c * act / (kms * (kas + act) + subs_c * (kac + act))
+        E = float(os.environ['Eval'])
+        return v_max * E * subs_c * act / (kms * (kas + act) + subs_c * (kac + act))
     return eq
 
 

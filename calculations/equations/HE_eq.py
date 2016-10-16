@@ -1,6 +1,6 @@
 import lmfit
 from calculations.equations.fitparam import FitParam
-
+import os
 
 def he_function(params, subs_c, rate, *_):
     """
@@ -10,8 +10,8 @@ def he_function(params, subs_c, rate, *_):
     kh = params['kh'].value
     v_max = params['v_max'].value
     n = params['n'].value
-
-    rate_calc = (v_max * subs_c ** n) / (kh + subs_c ** n)
+    E = float(os.environ['Eval'])
+    rate_calc = (v_max * E * subs_c ** n) / (kh + subs_c ** n)
     return rate_calc - rate
 
 
@@ -20,7 +20,8 @@ def create_he(kh, v_max, n, *_):
     Create hills equation
     """
     def eq(x, *_):
-        return (v_max * x ** n) / (kh + x ** n)
+        E = float(os.environ['Eval'])
+        return (v_max * E * x ** n) / (kh + x ** n)
     return eq
 
 

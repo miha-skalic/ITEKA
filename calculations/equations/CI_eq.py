@@ -1,6 +1,6 @@
 import lmfit
 from calculations.equations import FitParam
-
+import os
 
 def my_fiteq(params, subs_c, rate, *_):
     """
@@ -11,7 +11,8 @@ def my_fiteq(params, subs_c, rate, *_):
     inh = params['Inh'].value
     ki = params['ki'].value
 
-    rate_calc = v_max * subs_c / (km + subs_c + km * inh / ki)
+    E = float(os.environ['Eval'])
+    rate_calc = v_max * E * subs_c / (km + subs_c + km * inh / ki)
     return rate_calc - rate
 
 
@@ -20,7 +21,8 @@ def create_my_eq(km, v_max, inh, ki, *_):
     Competitive inhibition (irr) equation
     """
     def eq(subs_c, *_):
-        return v_max * subs_c / (km + subs_c + km * inh / ki)
+        E = float(os.environ['Eval'])
+        return v_max * E * subs_c / (km + subs_c + km * inh / ki)
     return eq
 
 

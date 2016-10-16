@@ -1,6 +1,6 @@
 import lmfit
 from calculations.equations import FitParam
-
+import os
 
 def ainh_function(params, subs_c, rate, *_):
     """
@@ -13,7 +13,9 @@ def ainh_function(params, subs_c, rate, *_):
     inh = params['Inh'].value
     ki = params['ki'].value
 
-    rate_calc = v_max * subs_c * (ks + subs_c) ** (n-1) / (l * (ks * (1 + inh / ki)) ** n + (ks + subs_c) ** n)
+    E = float(os.environ['Eval'])
+
+    rate_calc = v_max * E * subs_c * (ks + subs_c) ** (n-1) / (l * (ks * (1 + inh / ki)) ** n + (ks + subs_c) ** n)
     return rate_calc - rate
 
 
@@ -22,7 +24,8 @@ def create_ainh(ks, v_max, n, l, inh, ki, *_):
     Create Allosteric inhibition equation
     """
     def eq(subs_c, *_):
-        return v_max * subs_c * (ks + subs_c) ** (n-1) / (l * (ks * (1 + inh / ki)) ** n + (ks + subs_c) ** n)
+        E = float(os.environ['Eval'])
+        return v_max * E * subs_c * (ks + subs_c) ** (n-1) / (l * (ks * (1 + inh / ki)) ** n + (ks + subs_c) ** n)
     return eq
 
 

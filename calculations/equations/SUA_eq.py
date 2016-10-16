@@ -1,6 +1,6 @@
 import lmfit
 from calculations.equations import FitParam
-
+import os
 
 def my_fiteq(params, subs_c, rate, *_):
     """
@@ -9,8 +9,8 @@ def my_fiteq(params, subs_c, rate, *_):
     ksa = params['ksa'].value
     v_max = params['v_max'].value
     ksc = params['ksc'].value
-
-    rate_calc = v_max * (subs_c / ksa) ** 2 / (1 + subs_c / ksc + subs_c / ksa + (subs_c / ksa) ** 2)
+    E = float(os.environ['Eval'])
+    rate_calc = v_max * E * (subs_c / ksa) ** 2 / (1 + subs_c / ksc + subs_c / ksa + (subs_c / ksa) ** 2)
     return rate_calc - rate
 
 
@@ -19,7 +19,8 @@ def create_my_eq(ksa, v_max, ksc, *_):
     Substrate activation (irr) equation
     """
     def eq(subs_c, *_):
-        return v_max * (subs_c / ksa) ** 2 / (1 + subs_c / ksc + subs_c / ksa + (subs_c / ksa) ** 2)
+        E = float(os.environ['Eval'])
+        return v_max * E * (subs_c / ksa) ** 2 / (1 + subs_c / ksc + subs_c / ksa + (subs_c / ksa) ** 2)
     return eq
 
 

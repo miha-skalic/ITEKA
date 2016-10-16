@@ -1,6 +1,6 @@
 import lmfit
 from calculations.equations import FitParam
-
+import os
 
 def my_fiteq(params, subs_c, rate, *_):
     """
@@ -11,8 +11,9 @@ def my_fiteq(params, subs_c, rate, *_):
     inh = params['inh'].value
     kis = params['kis'].value
     kic = params['kic'].value
+    E = float(os.environ['Eval'])
 
-    rate_calc = v_max * subs_c / (km * (1 + inh / kis) + subs_c * (1 + inh / kic))
+    rate_calc = v_max * E * subs_c / (km * (1 + inh / kis) + subs_c * (1 + inh / kic))
     return rate_calc - rate
 
 
@@ -21,7 +22,8 @@ def create_my_eq(km, v_max, inh, kis, kic, *_):
     Mixed inhibition (irr) equation
     """
     def eq(subs_c, *_):
-        return v_max * subs_c / (km * (1 + inh / kis) + subs_c * (1 + inh / kic))
+        E = float(os.environ['Eval'])
+        return v_max * E * subs_c / (km * (1 + inh / kis) + subs_c * (1 + inh / kic))
     return eq
 
 

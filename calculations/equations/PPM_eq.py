@@ -1,6 +1,6 @@
 import lmfit
 from calculations.equations import FitParam
-
+import os
 
 def ppmsi_function(params, subsa, rate, subsb, *_):
     """
@@ -10,8 +10,8 @@ def ppmsi_function(params, subsa, rate, subsb, *_):
     kdb = params['kdb'].value
     kma = params['kma'].value
     kmb = params['kmb'].value
-
-    rate_calc = v_max * subsb * subsa / (kmb * subsa + (kma * subsb) * (1 + (subsb / kdb)) + subsa * subsb)
+    E = float(os.environ['Eval'])
+    rate_calc = v_max * E * subsb * subsa / (kmb * subsa + (kma * subsb) * (1 + (subsb / kdb)) + subsa * subsb)
     return rate_calc - rate
 
 
@@ -20,7 +20,8 @@ def create_ppmsi(v_max, kdb, kma, kmb, *_):
     Create Ping pong mechanism equation
     """
     def eq(subsa, subsb):
-        return v_max * subsb * subsa / (kmb * subsa + (kma * subsb) * (1 + (subsb / kdb)) + subsa * subsb)
+        E = float(os.environ['Eval'])
+        return v_max * E * subsb * subsa / (kmb * subsa + (kma * subsb) * (1 + (subsb / kdb)) + subsa * subsb)
     return eq
 
 

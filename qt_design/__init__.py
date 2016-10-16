@@ -33,6 +33,7 @@ class DefaultWindow(Ui_MainWindow, DsMethods, SsMethods):
                                                         is_itc=dlg.IsITC.isChecked(),
                                                         arate=dlg.ASpBox.value(),
                                                         brate=dlg.BSpBox.value())
+        os.environ['Eval'] = str(enzymec)
 
     def batch_run(self):
         """
@@ -100,6 +101,7 @@ class DefaultWindow(Ui_MainWindow, DsMethods, SsMethods):
                                                                enzymec = float(dlg.EnzCoN.text()),
                                                                cunit=dlg.ConcVal.text(),
                                                                tunit=dlg.TimeVal.text())
+            os.environ['Eval'] = str(dlg.EnzCoN.text())
 
             # enable new options
             self.LoadButton.setEnabled(True)

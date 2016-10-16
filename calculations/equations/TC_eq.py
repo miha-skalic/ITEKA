@@ -1,6 +1,6 @@
 import lmfit
 from calculations.equations import FitParam
-
+import os
 
 def tc_function(params, subsa, rate, subsb, *_):
     """
@@ -10,8 +10,9 @@ def tc_function(params, subsa, rate, subsb, *_):
     kda = params['kda'].value
     kma = params['kma'].value
     kmb = params['kmb'].value
+    E = float(os.environ['Eval'])
 
-    rate_calc = v_max * subsb * subsa / (kda * kmb + kmb * subsa + kma * subsb + subsb * subsa)
+    rate_calc = v_max * E * subsb * subsa / (kda * kmb + kmb * subsa + kma * subsb + subsb * subsa)
     return rate_calc - rate
 
 
@@ -20,7 +21,8 @@ def create_tc(v_max, kda, kma, kmb, *_):
     Ternary complex mechanism equation
     """
     def eq(subsa, subsb):
-        return v_max * subsb * subsa / (kda * kmb + kmb * subsa + kma * subsb + subsb * subsa)
+        E = float(os.environ['Eval'])
+        return v_max * E * subsb * subsa / (kda * kmb + kmb * subsa + kma * subsb + subsb * subsa)
     return eq
 
 

@@ -224,12 +224,12 @@ def plot_res(reac_obj, plot_obj, equation=None, equations=None, grid=False, a_is
                   in zip(reac_obj.concentrations, reac_obj.rates)]
 
     else:
-        x_vals = [x for x, _, _ in reac_obj.get_points(a_isvar)]
+        x_vals = [x for x, _, _, _ in reac_obj.get_points(a_isvar)]
         if equations is not None:
-            y_vals = [true_rate - eq(true_conc, x_2) for ((true_conc, true_rate, x_2), eq)
+            y_vals = [true_rate - eq(true_conc, x_2, ec) for ((true_conc, true_rate, x_2, ec), eq)
                       in zip(reac_obj.get_points(a_isvar), equations)]
         else:
-            y_vals = [true_rate - equation(true_conc, x_2) for (true_conc, true_rate, x_2)
+            y_vals = [true_rate - equation(true_conc, x_2, ec) for (true_conc, true_rate, x_2, ec)
                       in reac_obj.get_points(a_isvar)]
 
         cols = [cm(1.*i/len(x_vals)) for i in range(len(x_vals))]
@@ -278,7 +278,7 @@ def plot_fit(plot_obj, x_vals, equation, signal=0, subs2=None, col='black', alp=
     x_fit = x_fit.ravel()
     x_fit = np.array(sorted(list(set(x_fit))))
     if subs2 is not None:
-        y_pred = equation(x_fit, subs2)
+        y_pred = equation(x_fit, subs2, float(os.environ['Eval']))
     else:
         y_pred = equation(x_fit)
     if signal == 1:

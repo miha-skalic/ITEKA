@@ -2,7 +2,7 @@ import lmfit
 from calculations.equations import FitParam
 import os
 
-def ppmsi_function(params, subsa, rate, subsb, *_):
+def ppmsi_function(params, subsa, rate, subsb, erate, *_):
     """
     Ping pong mechanism equation for optimization
     """
@@ -10,7 +10,8 @@ def ppmsi_function(params, subsa, rate, subsb, *_):
     kdb = params['kdb'].value
     kma = params['kma'].value
     kmb = params['kmb'].value
-    E = float(os.environ['Eval'])
+    # E = float(os.environ['Eval'])
+    E = erate
     rate_calc = v_max * E * subsb * subsa / (kmb * subsa + (kma * subsb) * (1 + (subsb / kdb)) + subsa * subsb)
     return rate_calc - rate
 
@@ -19,9 +20,9 @@ def create_ppmsi(v_max, kdb, kma, kmb, *_):
     """
     Create Ping pong mechanism equation
     """
-    def eq(subsa, subsb):
-        E = float(os.environ['Eval'])
-        return v_max * E * subsb * subsa / (kmb * subsa + (kma * subsb) * (1 + (subsb / kdb)) + subsa * subsb)
+    def eq(subsa, subsb, erate):
+        # E = float(os.environ['Eval'])
+        return v_max * erate * subsb * subsa / (kmb * subsa + (kma * subsb) * (1 + (subsb / kdb)) + subsa * subsb)
     return eq
 
 
@@ -42,15 +43,15 @@ class PPMSIparams(FitParam):
         self.param_order = ['v_max', 'kdb', 'kma', 'kmb']
         self.units = ['r', 'c', 'c', 'c']
 
-def ppm_function(params, subsa, rate, subsb, *_):
+def ppm_function(params, subsa, rate, subsb, erate, *_):
     """
     Ping pong mechanism equation for optimization
     """
     v_max = params['v_max'].value
     kma = params['kma'].value
     kmb = params['kmb'].value
-
-    rate_calc = v_max * subsb * subsa / (kmb * subsa + (kma * subsb) + subsa * subsb)
+    E = erate
+    rate_calc = v_max * E  * subsb * subsa / (kmb * subsa + (kma * subsb) + subsa * subsb)
     return rate_calc - rate
 
 
@@ -58,8 +59,8 @@ def create_ppm(v_max, kma, kmb, *_):
     """
     Create Ping pong mechanism equation
     """
-    def eq(subsa, subsb):
-        return v_max * subsb * subsa / ((kmb * subsa) + (kma * subsb) + (subsa * subsb))
+    def eq(subsa, subsb, erate):
+        return v_max * erate * subsb * subsa / ((kmb * subsa) + (kma * subsb) + (subsa * subsb))
     return eq
 
 

@@ -140,9 +140,11 @@ def output_fit_subgroup(ws, exp_data, fits, subgroup):
     varsets = exp_data.AllVar[subgroup]
     conssets = exp_data.AllConst[subgroup]
     ratesets = exp_data.AllRates[subgroup]
+    enzymesets = exp_data.Econc[subgroup]
+
     set_nu = 0
     # iter over sets
-    for varset, consset,  rateset, fit in zip(varsets, conssets, ratesets, fits[subgroup]):
+    for varset, consset, rateset, enzymeset, fit in zip(varsets, conssets, ratesets, enzymesets, fits[subgroup]):
         set_nu += 1
         # set naming
         ws.append(['Set {}'.format(set_nu)])
@@ -162,7 +164,8 @@ def output_fit_subgroup(ws, exp_data, fits, subgroup):
             row = []
             for rep_count in range(len(varset)):
                 row += [varset[rep_count][p_count], consset[rep_count][p_count], rateset[rep_count][p_count],
-                        fit.function(varset[rep_count][p_count], consset[rep_count][p_count])]
+                        fit.function(varset[rep_count][p_count], consset[rep_count][p_count],
+                                     enzymeset[rep_count][p_count])]
             ws.append(row)
         ws.append([])
         ws.append(['Fit parameters'])

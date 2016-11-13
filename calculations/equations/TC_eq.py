@@ -2,7 +2,7 @@ import lmfit
 from calculations.equations import FitParam
 import os
 
-def tc_function(params, subsa, rate, subsb, *_):
+def tc_function(params, subsa, rate, subsb, erate, *_):
     """
     Ternary complex mechanism equation for optimization
     """
@@ -10,8 +10,8 @@ def tc_function(params, subsa, rate, subsb, *_):
     kda = params['kda'].value
     kma = params['kma'].value
     kmb = params['kmb'].value
-    E = float(os.environ['Eval'])
-
+    # E = float(os.environ['Eval'])
+    E = erate
     rate_calc = v_max * E * subsb * subsa / (kda * kmb + kmb * subsa + kma * subsb + subsb * subsa)
     return rate_calc - rate
 
@@ -20,9 +20,9 @@ def create_tc(v_max, kda, kma, kmb, *_):
     """
     Ternary complex mechanism equation
     """
-    def eq(subsa, subsb):
-        E = float(os.environ['Eval'])
-        return v_max * E * subsb * subsa / (kda * kmb + kmb * subsa + kma * subsb + subsb * subsa)
+    def eq(subsa, subsb, erate):
+        # E = float(os.environ['Eval'])
+        return v_max * erate * subsb * subsa / (kda * kmb + kmb * subsa + kma * subsb + subsb * subsa)
     return eq
 
 
@@ -43,7 +43,7 @@ class TCparams(FitParam):
         self.param_order = ['v_max', 'kda', 'kma', 'kmb']
         self.units = ['r', 'c', 'c', 'c']
 
-def tcsi_function(params, subsa, rate, subsb, *_):
+def tcsi_function(params, subsa, rate, subsb, erate, *_):
     """
     Substrate inhibited ternary complex mechanism equation for optimization
     """
@@ -53,7 +53,10 @@ def tcsi_function(params, subsa, rate, subsb, *_):
     kda = params['kda'].value
     ksib = params['ksib'].value
 
-    rate_calc = v_max * subsb * subsa / (kda * kmb + kmb * subsa + kma * subsb + subsa * subsb * (1 + (subsb / ksib)))
+    # E = float(os.environ['Eval'])
+    E = erate
+
+    rate_calc = v_max * E * subsb * subsa / (kda * kmb + kmb * subsa + kma * subsb + subsa * subsb * (1 + (subsb / ksib)))
     return rate_calc - rate
 
 
@@ -61,8 +64,8 @@ def create_tcsi(v_max, kma, kmb, kda, ksib, *_):
     """
     Substrate inhibited ternary complex equation
     """
-    def eq(subsa, subsb):
-        return v_max * subsb * subsa / (kda * kmb + kmb * subsa + kma * subsb + subsa * subsb * (1 + (subsb / ksib)))
+    def eq(subsa, subsb, erate):
+        return v_max * erate * subsb * subsa / (kda * kmb + kmb * subsa + kma * subsb + subsa * subsb * (1 + (subsb / ksib)))
     return eq
 
 

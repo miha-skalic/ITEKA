@@ -82,6 +82,24 @@ class Ui_LoadDataDs(object):
         self.TimeStep.setProperty("value", 1.0)
         self.TimeStep.setObjectName(_fromUtf8("TimeStep"))
         self.verticalLayout_5.addWidget(self.TimeStep)
+        self.label_6 = QtGui.QLabel(self.verticalWidget)
+        self.label_6.setObjectName(_fromUtf8("label_6"))
+        self.verticalLayout_5.addWidget(self.label_6)
+        self.InitVol = QtGui.QDoubleSpinBox(self.verticalWidget)
+        self.InitVol.setDecimals(4)
+        self.InitVol.setMaximum(999.99)
+        self.InitVol.setProperty("value", 1.0)
+        self.InitVol.setObjectName(_fromUtf8("InitVol"))
+        self.verticalLayout_5.addWidget(self.InitVol)
+        self.label_8 = QtGui.QLabel(self.verticalWidget)
+        self.label_8.setObjectName(_fromUtf8("label_8"))
+        self.verticalLayout_5.addWidget(self.label_8)
+        self.AddVol = QtGui.QDoubleSpinBox(self.verticalWidget)
+        self.AddVol.setDecimals(5)
+        self.AddVol.setMaximum(999.99)
+        self.AddVol.setProperty("value", 0.1)
+        self.AddVol.setObjectName(_fromUtf8("AddVol"))
+        self.verticalLayout_5.addWidget(self.AddVol)
         spacerItem1 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.verticalLayout_5.addItem(spacerItem1)
         self.verticalLayout_2.addWidget(self.verticalWidget)
@@ -148,6 +166,8 @@ class Ui_LoadDataDs(object):
         self.SubBName.setText(_translate("LoadDataDs", "SubsB", None))
         self.label.setText(_translate("LoadDataDs", "Concentration", None))
         self.label_2.setText(_translate("LoadDataDs", "Injection spacing (time)", None))
+        self.label_6.setText(_translate("LoadDataDs", "Initial Volume", None))
+        self.label_8.setText(_translate("LoadDataDs", "Added Volume per injection ", None))
         self.label_3.setText(_translate("LoadDataDs", "Reaction rate", None))
         self.AddRep.setText(_translate("LoadDataDs", "Append replicate to set", None))
         self.SwitchSet.setText(_translate("LoadDataDs", "Next set", None))
@@ -158,4 +178,11 @@ class Ui_LoadDataDs(object):
         self.SetNu.setText(_translate("LoadDataDs", "Set 1", None))
         self.OKButton.setText(_translate("LoadDataDs", "Import", None))
         self.CancelButton.setText(_translate("LoadDataDs", "Cancel", None))
+
+
+class LoadDataDs(QtGui.QDialog, Ui_LoadDataDs):
+    def __init__(self, parent=None, f=QtCore.Qt.WindowFlags()):
+        QtGui.QDialog.__init__(self, parent, f)
+
+        self.setupUi(self)
 

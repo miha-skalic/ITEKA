@@ -210,7 +210,8 @@ class LoadDataDs(QtGui.QDialog, Ui_LoadDataDs):
 
         if self.subdata.isnewset():
             try:
-                self.subdata.add_set(varvar, constvar, rates, setname=self.SetNu.text())
+                self.subdata.add_set(varvar, constvar, rates, setname=self.SetNu.text(),
+                                     vinint=self.InitVol.value(), vadd=self.AddVol.value())
             except AssertionError:
                 WarningMessage("Dimension mismatch. Can't add the replicate.")
             except ValueError:
@@ -218,7 +219,8 @@ class LoadDataDs(QtGui.QDialog, Ui_LoadDataDs):
                                " numbers separated by space, comma or tab.")
         else:
             try:
-                self.subdata.add_rep(varvar, constvar, rates)
+                self.subdata.add_rep(varvar, constvar, rates,
+                                     vinint=self.InitVol.value(), vadd=self.AddVol.value())
             except AssertionError:
                 WarningMessage("Dimension mismatch. Can't add the replicate.")
             except ValueError:
@@ -533,12 +535,12 @@ class ExploreSolutions(QtGui.QDialog, Ui_SolutionExplorer):
             if sel_set == -1:
                 self.EncCB.setCurrentIndex(0)
                 self.set_equations = [calculations.find_fit(sel_eq,
-                                      sel_eq.initializations, x, y, x2)
-                                      for x, y, x2 in self.alldata.get_points(a_isvar)]
+                                      sel_eq.initializations, x, y, x2, ec)
+                                      for x, y, x2, ec in self.alldata.get_points(a_isvar)]
             # fit selected
             else:
-                x, y, x2 = list(self.alldata.get_points(a_isvar))[sel_set]
-                self.set_equations[sel_set] = calculations.find_fit(sel_eq, sel_eq.initializations, x, y, x2)
+                x, y, x2, ec = list(self.alldata.get_points(a_isvar))[sel_set]
+                self.set_equations[sel_set] = calculations.find_fit(sel_eq, sel_eq.initializations, x, y, x2, ec)
 
             self.make_plot(multiple=True)
 
@@ -590,12 +592,13 @@ class ExploreSolutions(QtGui.QDialog, Ui_SolutionExplorer):
         group_index = True if self.SetCB.currentIndex() == 0 else False
         eqs = [fit.function for fit in self.set_equations]
         sem_sum = 0.
-        for seta, setb, setr, equation in zip(self.alldata.AllVar[group_index],
-                                              self.alldata.AllConst[group_index],
-                                              self.alldata.AllRates[group_index],
-                                              eqs):
+        for seta, setb, setr, seteconc, equation in zip(self.alldata.AllVar[group_index],
+                                                        self.alldata.AllConst[group_index],
+                                                        self.alldata.AllRates[group_index],
+                                                        self.alldata.Econc[group_index],
+                                                        eqs):
             for apoints, bpoints, rpoints in zip(seta, setb, setr):
-                sem_sum += sum((equation(apoints, bpoints) - rpoints)**2)
+                sem_sum += sum((equation(apoints, bpoints, seteconc) - rpoints)**2)
         self.ResLab.setText('{0:.8f}'.format(sem_sum))
 
     def change_graph_select(self):
@@ -896,11 +899,11 @@ class BatchRun(QtGui.QDialog, Ui_BatchDialog):
 
         # make fits
         sub_a_fits = [calculations.find_fit(sel_eq,
-                      sel_eq.initializations, x, y, x2)
-                      for x, y, x2 in self.alldata.get_points(True)]
+                      sel_eq.initializations, x, y, x2, ec)
+                      for x, y, x2, ec in self.alldata.get_points(True)]
         sub_b_fits = [calculations.find_fit(sel_eq,
-                      sel_eq.initializations, x, y, x2)
-                      for x, y, x2 in self.alldata.get_points(False)]
+                      sel_eq.initializations, x, y, x2, ec)
+                      for x, y, x2, ec in self.alldata.get_points(False)]
         fits = {True: sub_a_fits, False: sub_b_fits}
 
         # write xls
@@ -1076,9 +1079,12 @@ class PointsView(QtGui.QDialog, Ui_PointsView):
             self.reac_data.AllVar[subs_sel][set_pos].pop(rep_pos)
             self.reac_data.AllRates[subs_sel][set_pos].pop(rep_pos)
             self.reac_data.AllConst[subs_sel][set_pos].pop(rep_pos)
+            self.reac_data.Econc[subs_sel][set_pos].pop(rep_pos)
+
             if not self.reac_data.AllVar[subs_sel][set_pos]:
                 self.reac_data.AllVar[subs_sel].pop(set_pos)
                 self.reac_data.AllRates[subs_sel].pop(set_pos)
                 self.reac_data.AllConst[subs_sel].pop(set_pos)
+                self.reac_data.Econc[subs_sel].pop(set_pos)
                 self.reac_data.setnames[subs_sel].pop(set_pos)
             self.qbox_level1()

@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import os
 
 
 def random_start(in_params):
@@ -104,12 +105,18 @@ class TwoSubstrates():
         self.Bconst = []
         self.Arates = []
         self.Brates = []
+
+        self.AEnzyme = []
+        self.BEnzyme = []
+
         self.setnames = {True: [], False: []}
 
         self.AllVar = {True: self.Asets, False: self.Bsets}
         self.AllConst = {True: self.Aconst, False: self.Bconst}
         self.AllRates = {True: self.Arates, False: self.Brates}
         self.stoich = {True: float(brate), False: float(arate)}
+
+        self.Econc = {True: self.AEnzyme, False: self.BEnzyme}
 
         # units
         self.cunit = cunit
@@ -123,7 +130,7 @@ class TwoSubstrates():
         self.a_is_var = not self.a_is_var
         self.setindex = 0
 
-    def add_rep(self, varvals, constvar, rates, setpos=None):
+    def add_rep(self, varvals, constvar, rates, setpos=None, vinint=1., vadd=0.1):
         """
         Adds replicate to specified set
         """
@@ -141,7 +148,11 @@ class TwoSubstrates():
         self.AllRates[self.a_is_var][setpos].append(rates)
         self.AllConst[self.a_is_var][setpos].append(constvar)
 
-    def add_set(self, varvals, constvals, rates, setname='Nameless_set'):
+        # enzmy concentration
+        econc = [vinint / (vadd * (i + 1.) + vinint) * float(os.environ['Eval']) for i in range(1, len(varvals) + 1)]
+        self.Econc[self.a_is_var][setpos].append(econc)
+
+    def add_set(self, varvals, constvals, rates, setname='Nameless_set', vinint=1., vadd=0.1):
         """
         Adds data to sets
         """
@@ -157,6 +168,10 @@ class TwoSubstrates():
         self.AllRates[self.a_is_var].append([rates])
 
         self.setnames[self.a_is_var].append(setname)
+
+        # enzmy concentration
+        econc = [vinint / (vadd * (i + 1.) + vinint) * float(os.environ['Eval']) for i in range(1, len(varvals) + 1)]
+        self.Econc[self.a_is_var].append([econc])
 
     def next_set(self):
         """
@@ -224,12 +239,14 @@ class TwoSubstrates():
         varss = self.AllVar[a_var]
         consts = self.AllConst[a_var]
         rates = self.AllRates[a_var]
+        enzyms = self.Econc[a_var]
 
         for i in range(len(varss)):
             var = np.concatenate(varss[i])
             const = np.concatenate(consts[i])
             rate = np.concatenate(rates[i])
-            yield var, rate, const
+            enzyms = np.concatenate(enzyms[i])
+            yield var, rate, const, enzyms
 
     def get_repres(self, a_var=True):
         """
@@ -237,7 +254,7 @@ class TwoSubstrates():
         """
         new_class = OneSubstrate('temp', cunit=self.cunit, tunit=self.tunit, enzymec=self.enzymec)
         n = 0
-        for concx, ratex, _ in self.get_points(a_var):
+        for concx, ratex, _, _ in self.get_points(a_var):
             new_class.add_replicate(concx, ratex, transform=False, setname=self.setnames[a_var][n])
             n += 1
         return new_class
@@ -249,12 +266,15 @@ class TwoSubstrates():
         fvar = np.array([])
         fcost = np.array([])
         frate = np.array([])
-        for concx, ratex, conccx in self.get_points(a_var):
+        fenzym = np.array([])
+
+        for concx, ratex, conccx, enzyx in self.get_points(a_var):
             fvar = np.append(fvar, concx)
             fcost = np.append(fcost, conccx)
             frate = np.append(frate, ratex)
+            fenzym = np.append(fenzym, enzyx)
 
-        return fvar, frate, fcost
+        return fvar, frate, fcost, fenzym
 
     def get_const_mean(self, a_isvar=True):
         """
@@ -269,5 +289,5 @@ class TwoSubstrates():
         """
         Return sum of residuals squared based on give function
         """
-        a_var, a_rate, a_const = self.get_allpoints(a_var)
-        return sum((fitfunc(a_var, a_const) - a_rate) ** 2)
+        a_var, a_rate, a_const, a_enzyme = self.get_allpoints(a_var)
+        return sum((fitfunc(a_var, a_const, a_enzyme) - a_rate) ** 2)
